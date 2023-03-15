@@ -19,19 +19,25 @@ public class Task03 {
         fh.setFormatter(sFormat);
 
         LinkedList<Integer> myList = new LinkedList<Integer>();
-        myList = CalcIt(logger, iScanner, myList);
+        int count = 0;
+        myList = CalcIt(logger, iScanner, myList, count);
         iScanner.close();
     }
 
-    public static LinkedList<Integer> CalcIt(Logger logger, Scanner x, LinkedList<Integer> mList) {
+    public static LinkedList<Integer> CalcIt(Logger logger, Scanner x, LinkedList<Integer> mList, int countIt) {
 
-        System.out.println("Введите b для отмены последней операции, Введите q для выхода из программы");
+        if (countIt == 0)
+            System.out.println("Введите число 1: ");
+        else {
 
-        System.out.println("Введите число 1: ");
+            System.out
+                    .println("Info. Введите b для отмены последней операции\nInfo. Введите q для выхода из программы.");
+            System.out.println();
+            System.out.println("Введите число или действие(+, -, *, %, /) с полученным значением: ");
+        }
         String num1 = x.next();
-
         if (IsDigit(num1)) {
-            logger.info("Число 1 успешно введено.");
+            logger.info("Введен int в качестве 1 числа.");
             System.out.println("Введите действие: ");
             char my_char = x.next().charAt(0);
             logger.info("Действие успешно выбрано.");
@@ -57,15 +63,18 @@ public class Task03 {
                     case '/':
                         mList.add(Integer.parseInt(num1) / Integer.parseInt(num2));
                         break;
+
                 }
                 logger.info("Результат предоставлен.");
-                
+
                 System.out.printf("%s %c %s = %s\n", num1, my_char, num2, mList.getLast());
-                return CalcIt(logger, x, mList);
+                countIt++;
+                return CalcIt(logger, x, mList, countIt);
 
             } else {
+                logger.info("Ошибка! Введено некорректное значение.");
                 System.out.println("Введите число!");
-                return CalcIt(logger, x, mList);
+                return CalcIt(logger, x, mList, countIt);
             }
         } else {
             if (num1.equals("q")) {
@@ -76,10 +85,44 @@ public class Task03 {
                 mList.removeLast();
                 System.out.printf("Последний результат до отмены действия: %s\n", mList.getLast());
                 logger.info("Действие отменено.");
-                return CalcIt(logger, x, mList);
+                countIt--;
+                return CalcIt(logger, x, mList, countIt);
+            }
+            if (num1.equals("+") || num1.equals("-") || num1.equals("*")
+                    || num1.equals("%") || num1.equals("/")) {
+                logger.info("Выбрано действие с предыдущим значением. ");
+                System.out.println("Введите число: ");
+                String num2 = x.next();
+                if (IsDigit(num2)) {
+                    logger.info("Введено значение для взаимодействия с предыдущим. ");
+                    switch (num1) {
+                        case "+":
+                            mList.add(mList.peekLast() + Integer.parseInt(num2));
+                            break;
+                        case "-":
+                            mList.add(mList.peekLast() - Integer.parseInt(num2));
+                            break;
+                        case "*":
+                            mList.add(mList.peekLast() * Integer.parseInt(num2));
+                            break;
+                        case "%":
+                            mList.add(mList.peekLast() % Integer.parseInt(num2));
+                            break;
+                        case "/":
+                            mList.add(mList.peekLast() / Integer.parseInt(num2));
+                            break;
+
+                    }
+                    logger.info("Результат предоставлен.");
+
+                    System.out.printf("%s %s %s = %s\n", mList.get(countIt - 1), num1, num2, mList.getLast());
+                    countIt++;
+                    return CalcIt(logger, x, mList, countIt);
+                }
             }
             System.out.println("Моя твоя не понимать");
-            return CalcIt(logger, x, mList);
+            logger.info("Ошибка! Необработанное взаимодействие. ");
+            return CalcIt(logger, x, mList, countIt);
         }
     }
 
