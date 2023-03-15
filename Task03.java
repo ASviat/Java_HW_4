@@ -30,8 +30,7 @@ public class Task03 {
             System.out.println("Введите число 1: ");
         else {
 
-            System.out
-                    .println("Info. Введите b для отмены последней операции\nInfo. Введите q для выхода из программы.");
+            System.out.println("Info. Введите b для отмены последней операции\nInfo. Введите q для выхода из программы.");
             System.out.println();
             System.out.println("Введите число или действие(+, -, *, %, /) с полученным значением: ");
         }
@@ -135,3 +134,5 @@ public class Task03 {
         }
     }
 }
+
+
